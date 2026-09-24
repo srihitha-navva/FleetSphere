@@ -1,0 +1,2 @@
+import { Router } from 'express'; import { protect, allow, staffRoles } from '../middleware/auth.js'; import { createAssignment, listAssignments, unassign } from '../controllers/assignmentController.js';
+const router = Router(); router.use(protect, allow(...staffRoles)); router.get('/', listAssignments); router.post('/', createAssignment); router.patch('/:id/unassign', unassign); export default router;

@@ -1,0 +1,10 @@
+import Assignment from '../models/Assignment.js';
+import { assignVehicle, unassignVehicle } from '../services/assignmentService.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import AppError from '../utils/AppError.js';
+import { ensureScope, scopedFilter } from '../middleware/scope.js';
+import { audit } from '../utils/audit.js';
+import { listResponse, pagination } from '../utils/query.js';
+export const createAssignment = asyncHandler(async (req, res) => { const data = await assignVehicle({ vehicleId: req.body.vehicle, driverId: req.body.driver, user: req.user }); await audit(req, 'ASSIGNMENT', 'Assignment', data._id, 'Assigned vehicle to driver'); res.status(201).json({ success: true, message: 'Vehicle assigned', data }); });
+export const listAssignments = asyncHandler(async (req, res) => { const { page, limit, skip } = pagination(req.query); const filter = scopedFilter(req, req.query.active === 'false' ? {} : { isActive: true }); const [data, total] = await Promise.all([Assignment.find(filter).populate('vehicle driver assignedBy').skip(skip).limit(limit).sort('-assignedAt'), Assignment.countDocuments(filter)]); listResponse(res, data, total, page, limit); });
+export const unassign = asyncHandler(async (req, res) => { const assignment = await Assignment.findById(req.params.id); if (!assignment) throw new AppError('Assignment not found', 404); ensureScope(req, assignment); await unassignVehicle(assignment); await audit(req, 'UNASSIGNMENT', 'Assignment', assignment._id, 'Unassigned vehicle from driver'); res.json({ success: true, message: 'Vehicle unassigned', data: assignment }); });

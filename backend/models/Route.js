@@ -1,0 +1,3 @@
+import mongoose from 'mongoose';
+const schema = new mongoose.Schema({ name: { type: String, required: true }, source: { type: String, required: true }, destination: { type: String, required: true }, distance: { type: Number, required: true, min: 0 }, estimatedDuration: Number, stops: [String], organization: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true, index: true }, branch: { type: mongoose.Schema.Types.ObjectId, ref: 'Branch', required: true, index: true }, isActive: { type: Boolean, default: true } }, { timestamps: true });
+export default mongoose.model('Route', schema);

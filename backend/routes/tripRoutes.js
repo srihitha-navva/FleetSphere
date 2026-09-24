@@ -1,0 +1,2 @@
+import { Router } from 'express'; import { protect, allow, staffRoles } from '../middleware/auth.js'; import { createTripController, deleteTrip, getTrip, listTrips, setTripStatus, updateTrip } from '../controllers/tripController.js';
+const router = Router(); router.use(protect); router.route('/').get(listTrips).post(allow(...staffRoles), createTripController); router.route('/:id').get(getTrip).put(allow(...staffRoles), updateTrip).delete(allow(...staffRoles), deleteTrip); router.patch('/:id/status', allow(...staffRoles, 'DRIVER'), setTripStatus); export default router;

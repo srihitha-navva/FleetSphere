@@ -1,0 +1,3 @@
+import mongoose from 'mongoose';
+const schema = new mongoose.Schema({ title: { type: String, required: true }, type: { type: String, enum: ['INSURANCE', 'REGISTRATION', 'LICENSE', 'PERMIT', 'INVOICE', 'OTHER'], default: 'OTHER' }, fileUrl: { type: String, required: true }, fileName: String, expiryDate: Date, vehicle: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' }, driver: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver' }, organization: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true, index: true }, branch: { type: mongoose.Schema.Types.ObjectId, ref: 'Branch', index: true }, uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } }, { timestamps: true });
+export default mongoose.model('Document', schema);

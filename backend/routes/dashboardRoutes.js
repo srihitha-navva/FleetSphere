@@ -1,0 +1,2 @@
+import { Router } from 'express'; import { protect } from '../middleware/auth.js'; import { getMetric, getOverview } from '../controllers/dashboardController.js';
+const router = Router(); router.use(protect); router.get('/overview', getOverview); router.get('/fleet-utilization', getMetric); router.get('/fuel', getMetric); router.get('/maintenance', getMetric); router.get('/expenses', getMetric); export default router;
